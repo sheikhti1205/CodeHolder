@@ -177,7 +177,7 @@
 #   byrow = TRUE
 # )
 # rownames(A) = c("a", "b", "c")
-# colnames(A) = c("c", "d", "e")
+# colnames(A) = c("d", "e", "f")
 # cat("The 3x3 matrix:\n")
 # print(A)
 
@@ -274,7 +274,7 @@
 # len <- length(x)
 # x[len + 1] <- 8
 
-# 5.5Removing Elements
+# 5.5 Removing Elements
 # m <- c(1, 2, 3, 4, 5, 6, 7, 8, 9)
 # m <- m[m != 3]
 
