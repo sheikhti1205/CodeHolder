@@ -11,6 +11,7 @@ vector<int> naive_search(const string &text, const string &pattern) {
     if (m == 0) return matches;
 
     for (int i = 0; i + m <= n; ++i) {
+        // Try aligning pattern with text starting at i, then compare char by char.
         int j = 0;
         for (; j < m; ++j) {
             if (text[i + j] != pattern[j]) break;
@@ -28,6 +29,7 @@ int main(int argc, char **argv) {
 
     // Accept input either as command-line args or from stdin.
     // Usage (CLI): NPM.exe "abracadabra" "abra"
+    // Example: text="aaaaa", pattern="aa" -> matches at 0,1,2,3
     if (argc >= 3) {
         text = argv[1];
         pattern = argv[2];

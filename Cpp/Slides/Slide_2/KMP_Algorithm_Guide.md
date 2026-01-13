@@ -1,5 +1,7 @@
 # KMP Algorithm: Complete Visual Guide
 
+Note: The diagrams below are easiest to read in a monospace font.
+
 ## Overview
 The Knuth-Morris-Pratt (KMP) algorithm efficiently finds all occurrences of a pattern in a text by using a preprocessed **Longest Proper Prefix which is also Suffix (LPS)** array to avoid redundant comparisons.
 

@@ -4,6 +4,8 @@
 using namespace std;
 
 vector<int> LPS(const string& P){
+    // Build the LPS (longest prefix which is also suffix) table for pattern P.
+    // Example: P = "ABABC" -> LPS = [0,0,1,2,0]
     int m = P.size();
     vector<int> lps(m, 0);
     int len = 0, i = 1;
@@ -32,6 +34,7 @@ vector<int> search(const string& L, const string& P){
     if(m == 0 || m > n){
         return result;
     }
+    // Use LPS to skip comparisons when a mismatch happens.
     vector<int> lps = LPS(P);
     int i = 0, j = 0;
     while(i < n){
@@ -40,6 +43,7 @@ vector<int> search(const string& L, const string& P){
         }
 
         if(j == m){
+            // Full match of pattern ends at i-1 -> start index is i-m.
             result.push_back(i - m);
             j = lps[j - 1];
         }else if(i < n && L[i] != P[j]){
@@ -57,6 +61,9 @@ int main(){
     string line, pattern;
     getline(cin, line); getline(cin, pattern);
     
+    // Example input:
+    // line = "ababcabcabababd"
+    // pattern = "ababd"
     vector<int>matches = search(line, pattern);
     if(matches.empty()){
         cout << "No matches found..." << endl;

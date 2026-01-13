@@ -6,13 +6,16 @@ int main(){
     cin >> n;
     vector<int>arr(n);
     cout << "Enter the elements: " << endl;
+    // Example: 5 1 4 2 8
     for(int i = 0; i < n; i++){
         cin >> arr[i];
     }
     int temp;
     for(int i = 0; i < n - 1; i++){
+        // Each pass "bubbles" the largest remaining item to the end.
         for(int j = 0; j < n - i - 1; j++){
             if(arr[j] > arr[j + 1]){
+                // Swap adjacent out-of-order elements.
                 temp = arr[j + 1];
                 arr[j + 1] = arr[j];
                 arr[j] = temp;

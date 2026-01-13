@@ -10,6 +10,7 @@ int main(){
     bool found = false; // this is for - if there's no match...
 
     if(m<=n && m!=0 && n!=0){   
+        // Slide the pattern across the text and compare at each shift.
         for(int i=0; i<=n-m; i++){ 
         // i <= n-m...take example ababababab (line, here size is 10), and ab (pattern, here size is 2), 
         // so there's matches at index 0, 2, 4, 6, 8 = total 5 matches

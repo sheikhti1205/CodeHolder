@@ -5,6 +5,7 @@ using namespace std;
 
 // 1. Length
 int stringLength(const string &s) {
+    // Count characters until null terminator (manual version of s.length()).
     int count = 0;
     for(int i=0; s[i] !='\0';i++){
         count++;
@@ -14,11 +15,13 @@ int stringLength(const string &s) {
 
 // 2. Substring
 char *substring(char s[Max_size],int initial, int len) {
-   
+    // Placeholder: intended to return a new C-string of length len starting at "initial".
+    // Example: s="HIS FATHER IS THE PROFESSOR", initial=4, len=7 -> "FATHER "
 }
 
 // 3. Indexing (find pattern in text)
  int indexOf(const string &text, const string &pattern) {
+    // Find first occurrence of pattern in text (0-based index).
     size_t pos = text.find(pattern);
     if (pos != string::npos) return (int)pos; // 0-based index
     return -1; // not found
@@ -26,11 +29,13 @@ char *substring(char s[Max_size],int initial, int len) {
 
 // 4. Concatenation
 string concat(const string &s1, const string &s2) {
+    // Example: concat("MARK", "TWIN") -> "MARKTWIN"
     return s1 + s2;
 }
 
 // 5. Insertion
 string insertString(const string &s, int pos, const string &toInsert) {
+    // Example: insertString("ABCDEF", 3, "XYZ") -> "ABCXYZDEF"
     if (pos < 0 || pos > (int)s.length()) return s;
     string result = s;
     result.insert(pos, toInsert);
@@ -39,6 +44,7 @@ string insertString(const string &s, int pos, const string &toInsert) {
 
 // 6. Deletion
 string deleteString(const string &s, int pos, int len) {
+    // Example: deleteString("ABCDEFG", 4, 2) -> "ABCDG"
     if (pos < 0 || pos >= (int)s.length()) return s;
     string result = s;
     result.erase(pos, len);
@@ -47,6 +53,7 @@ string deleteString(const string &s, int pos, int len) {
 
 // 7. Replacement
 string replaceString(const string &s, const string &pattern, const string &replacement) {
+    // Example: replaceString("ABXYEFGH", "XY", "CD") -> "ABCDEFGH"
     size_t pos = s.find(pattern);
     if (pos != string::npos) {
         string result = s;
@@ -59,6 +66,7 @@ string replaceString(const string &s, const string &pattern, const string &repla
 int main() {
 
     char text[] = "HIS FATHER IS THE PROFESSOR";
+    // Demo for substring; other demos are commented below.
     cout << "Substring (start=4, len=7): " << substring(text, 4, 7) << endl;
   /*  string text = "HIS FATHER IS THE PROFESSOR";
 

@@ -6,6 +6,7 @@ int main(){
     cin >> n;
     vector<int> arr(n);
     cout << "Enter the elements (N.B. they need to be ascending and sorted!!!)" << endl;
+    // Example sorted list: 2 5 8 12 16 23 38 56 72 91
     for(int i = 0; i < n; i++){
         cin >> arr[i];
         if(i != 0 && arr[i] < arr[i-1]){
@@ -17,6 +18,7 @@ int main(){
     cin >> t;
     int lb = 0, ub = n - 1, mid;
     while(lb <= ub){
+        // Check the middle, then discard the half that cannot contain the target.
         mid = (ub + lb) / 2;
         if(arr[mid] == t){
             cout << "Target element found at index: " << mid << endl;
