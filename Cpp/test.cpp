@@ -7,3 +7,4 @@ int main() {
     std::cout << "The last digit (number % 10) is: " << remainder << std::endl;
     return 0;
 }
+//ji
