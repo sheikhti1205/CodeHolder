@@ -46,6 +46,7 @@ vector<int> search(const string& L, const string& P){
             // Full match of pattern ends at i-1 -> start index is i-m.
             result.push_back(i - m);
             j = lps[j - 1];
+    // Do NOTICE that L[i] != P[j] PART!!! -_-
         }else if(i < n && L[i] != P[j]){
             if(j != 0){
                 j = lps[j - 1];
