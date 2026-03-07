@@ -1,0 +1,3 @@
+select replace('jack and jue', 'j', 'bl') from dual;
+
+-- Replace...
