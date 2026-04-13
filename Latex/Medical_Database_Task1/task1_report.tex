@@ -1,0 +1,184 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\setstretch{1.12}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\lstset{
+  language=SQL,
+  basicstyle=\ttfamily\scriptsize,
+  frame=single,
+  breaklines=true,
+  showstringspaces=false,
+  columns=fullflexible
+}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\begin{document}
+
+\begin{center}
+\textbf{UNIVERSITY OF CHITTAGONG}\\
+Department of Computer Science and Engineering
+\end{center}
+
+\vspace{0.8cm}
+
+\begin{center}
+\textbf{\Large Mini-Project Report: Task 1}\\
+\textbf{Preliminary Database Modeling for a Medical Database}
+\end{center}
+
+\vspace{0.8cm}
+
+\textbf{Course Title:} Database Management System\\
+\textbf{Course Code:} CSE 414
+
+\vspace{0.8cm}
+
+\textbf{Submitted to:}\\
+Dr. Rudra Pratap Deb Nath\\
+Professor\\
+Department of Computer Science and Engineering\\
+University of Chittagong
+
+\vspace{0.8cm}
+
+\textbf{Submitted by:}\\
+Name: Sheikh Tawsif Bin Aftab\\
+ID: 24701026\\
+Session: 2023--2024 B.Sc. Engineering (4th Semester)\\
+Department of Computer Science and Engineering\\
+University of Chittagong
+
+\vspace{0.8cm}
+
+\textbf{Date of Submission:}\\
+10 April 2026
+
+\newpage
+
+\section{Introduction}
+The goal of this task is to prepare a preliminary database design for a medical information system.
+The database must store information about drugs, their categories, diseases treated by those drugs,
+side effects, commercial products, interactions with other drugs, and related clinical trials.
+
+The design in this report was guided by the provided Excel sample. That workbook is not a valid
+database table because it contains repeated groups such as multiple side-effect columns, multiple
+interaction columns, and multiple clinical-trial-condition columns. Therefore, the first step was to
+convert those repeating spreadsheet fields into proper entities and many-to-many relationships.
+
+\section{What The Sample Data Shows}
+After inspecting the sample workbook, the following observations were useful for the preliminary
+design:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item The workbook contains 250 rows.
+    \item It contains 6 distinct named drugs and 49 diseases.
+    \item Several spreadsheet columns are multi-valued: side effects, interacting drugs, and clinical trial conditions.
+    \item A drug can belong to more than one category. For example, \texttt{abciximab} and \texttt{etanercept} appear under multiple drug categories.
+    \item A drug can treat many diseases, and a disease can be treated by many drugs.
+    \item A drug can have many commercial products, and those products may come from different companies.
+    \item Clinical trial information is repeated across many rows, which indicates that trials should be stored separately and linked to drugs and conditions.
+\end{itemize}
+
+\section{Assumptions About The Mini-World}
+\begin{enumerate}[leftmargin=1.5em]
+    \item Each drug name in the spreadsheet represents a drug that should appear once in the \texttt{drugs} table.
+    \item Interacting drugs are also stored as drugs, even if the sample file does not provide full details for them.
+    \item Each disease belongs to one disease category in the current mini-world.
+    \item Each product belongs to one drug and is marketed by one company.
+    \item Each clinical trial has one main researcher and one main institution in this preliminary design.
+    \item Clinical trial conditions are stored separately because the spreadsheet shows that one trial may mention multiple conditions.
+\end{enumerate}
+
+\section{Preliminary Database Description}
+The preliminary design is centered on the \texttt{drugs} table. Around it, the model stores:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Drug categories} through a bridge table, because a drug may belong to several categories.
+    \item \textbf{Diseases} and \textbf{disease categories}, because drugs are used to treat diseases and many sample queries refer to disease categories.
+    \item \textbf{Side effects}, because a drug may cause multiple side effects and the same side effect may occur for many drugs.
+    \item \textbf{Products} and \textbf{companies}, because the same drug may be sold under several product names.
+    \item \textbf{Drug interactions}, modeled as a self-relationship between drugs.
+    \item \textbf{Clinical trials}, together with institutions, researchers, and trial conditions.
+\end{itemize}
+
+This design is already normalized enough to avoid the repeated columns seen in the workbook, but it
+is still a preliminary Task 1 design. In Task 2, the model will be revised more formally using
+course notation, explicit cardinalities, and stronger native-key choices.
+
+\section{List Of Tables And Attributes}
+\renewcommand{\arraystretch}{1.18}
+\begin{longtable}{p{0.24\textwidth} p{0.70\textwidth}}
+\toprule
+\textbf{Table} & \textbf{Important attributes and purpose} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Table} & \textbf{Important attributes and purpose} \\
+\midrule
+\endhead
+\texttt{drugs} & \texttt{drug\_id} (PK), \texttt{drug\_name} (unique), \texttt{notes}. Stores each drug once. \\
+\texttt{drug\_categories} & \texttt{drug\_category\_id} (PK), \texttt{category\_name} (unique). Stores available drug categories. \\
+\texttt{drug\_category\_assignments} & \texttt{drug\_id} (FK), \texttt{drug\_category\_id} (FK). Resolves the many-to-many relation between drugs and drug categories. \\
+\texttt{disease\_categories} & \texttt{disease\_category\_id} (PK), \texttt{category\_name} (unique). Stores categories such as Immunological or Respiratory. \\
+\texttt{diseases} & \texttt{disease\_id} (PK), \texttt{disease\_name} (unique), \texttt{disease\_category\_id} (FK). Stores treatable diseases. \\
+\texttt{side\_effects} & \texttt{side\_effect\_id} (PK), \texttt{side\_effect\_name} (unique). Stores side-effect names. \\
+\texttt{drug\_treatments} & \texttt{drug\_id} (FK), \texttt{disease\_id} (FK). Stores which drugs treat which diseases. \\
+\texttt{drug\_side\_effects} & \texttt{drug\_id} (FK), \texttt{side\_effect\_id} (FK). Stores side effects associated with each drug. \\
+\texttt{companies} & \texttt{company\_id} (PK), \texttt{company\_name} (unique). Stores manufacturers or product owners. \\
+\texttt{products} & \texttt{product\_id} (PK), \texttt{product\_name}, \texttt{drug\_id} (FK), \texttt{company\_id} (FK). Stores commercial products for drugs. \\
+\texttt{drug\_interactions} & \texttt{drug\_id} (FK), \texttt{interacting\_drug\_id} (FK). Stores interacting pairs of drugs. \\
+\texttt{institutions} & \texttt{institution\_id} (PK), \texttt{institution\_name}, \texttt{country}, \texttt{facility\_address}. Stores the trial host institution. \\
+\texttt{researchers} & \texttt{researcher\_id} (PK), \texttt{researcher\_name}, \texttt{institution\_id} (FK). Stores main researchers. \\
+\texttt{clinical\_trials} & \texttt{trial\_id} (PK), \texttt{trial\_title} (unique), \texttt{start\_date}, \texttt{completion\_date}, \texttt{participants}, \texttt{status}, \texttt{institution\_id} (FK), \texttt{main\_researcher\_id} (FK). Stores trial metadata. \\
+\texttt{clinical\_trial\_drugs} & \texttt{trial\_id} (FK), \texttt{drug\_id} (FK). Stores which drugs are studied in a trial. \\
+\texttt{trial\_conditions} & \texttt{trial\_condition\_id} (PK), \texttt{condition\_name} (unique). Stores conditions mentioned by trials. \\
+\texttt{clinical\_trial\_conditions} & \texttt{trial\_id} (FK), \texttt{trial\_condition\_id} (FK). Stores the many-to-many relation between trials and conditions. \\
+\bottomrule
+\end{longtable}
+
+\section{Why This Preliminary Design Can Answer The Sample Queries}
+The design supports the sample queries because:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item side-effect queries use \texttt{drug\_side\_effects} and \texttt{side\_effects},
+    \item interaction queries use \texttt{drug\_interactions},
+    \item disease-category queries use \texttt{drug\_treatments}, \texttt{diseases}, and \texttt{disease\_categories},
+    \item product and company information come from \texttt{products} and \texttt{companies},
+    \item clinical-trial queries use \texttt{clinical\_trials}, \texttt{clinical\_trial\_drugs}, \texttt{researchers}, and \texttt{institutions}.
+\end{itemize}
+
+\section{SQL Commands To Create The Database}
+The complete SQL DDL for the preliminary design is included below. The same file is also stored in:
+
+\texttt{SQL/Medical\_Database/task1\_preliminary\_schema.sql}
+
+\lstinputlisting{../../SQL/Medical_Database/task1_preliminary_schema.sql}
+
+\section{Conclusion}
+This preliminary Task 1 database design converts the denormalized spreadsheet into a set of related
+tables that can store the required medical information without repeated columns. The design keeps
+the main concepts clear and supports the sample queries, while leaving room for improvement in the
+more formal Task 2 redesign.
+
+\end{document}

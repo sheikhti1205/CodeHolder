@@ -1,0 +1,3 @@
+use PHARMA_DB;
+
+SELECT * FROM DRUG;

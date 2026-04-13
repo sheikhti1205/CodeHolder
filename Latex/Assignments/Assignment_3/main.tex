@@ -1,0 +1,507 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+\setstretch{1.15}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+
+% ---------- diagram helper ----------
+% Usage: \insertdiagram{filename.png}{Caption text}
+\newcommand{\insertdiagram}[2]{%
+    \begin{center}
+    \IfFileExists{#1}{
+        \includegraphics[width=0.9\textwidth]{#1}
+    }{
+        \fbox{%
+            \parbox[c][6cm][c]{0.88\textwidth}{\centering
+            Diagram placeholder\\[6pt]
+            Insert PNG file here: \texttt{#1}}
+        }
+    }
+    \end{center}
+    \begin{center}
+    \textit{#2}
+    \end{center}
+}
+
+\begin{document}
+
+% ================= TITLE PAGE =================
+\begin{center}
+\textbf{UNIVERSITY OF CHITTAGONG}\\
+Department of Computer Science and Engineering
+\end{center}
+
+\vspace{1cm}
+
+\begin{center}
+\textbf{\Large Assignment}
+\end{center}
+
+\vspace{0.8cm}
+
+\textbf{Course Title :} Database Management System\\
+\textbf{Course Code No. :} CSE 414
+
+\vspace{1cm}
+
+\textbf{Submitted to:}\\
+Dr. Rudra Pratap Deb Nath\\
+Professor\\
+Department of Computer Science and Engineering\\
+University of Chittagong
+
+\vspace{1cm}
+
+\textbf{Submitted by:}\\
+Name: Sheikh Tawsif Bin Aftab\\
+ID: 24701026\\
+Session: 2023--2024 B.Sc. Engineering\\
+(4th Semester)\\
+Department of Computer Science and Engineering\\
+University of Chittagong
+
+\vspace{1cm}
+
+\textbf{Date of Submission:}\\
+28 February 2026
+
+\newpage
+
+% ================= MAIN BODY =================
+\begin{center}
+\textbf{\Large Chapter 6}
+\end{center}
+
+\textbf{Question 1}\\
+Analyze, solve, and present the solution of Problem 6.1.
+
+\textbf{Answer:}
+
+For the car insurance company, the main entity sets are \textbf{Customer}, \textbf{Car}, \textbf{Accident}, \textbf{Policy}, and \textbf{Payment}.
+
+\insertdiagram{q6_1.png}{E-R diagram for Problem 6.1}
+
+\textbf{Entities:}
+\begin{itemize}[leftmargin=1.5em]
+    \item Customer (\underline{customer\_id}, name, address, phone)
+    \item Car (\underline{car\_id}, license\_no, make, model, year)
+    \item Accident (\underline{accident\_id}, accident\_date, location, description)
+    \item Policy (\underline{policy\_no}, issue\_date, type, status)
+    \item Payment (\underline{payment\_id}, period\_from, period\_to, due\_date, received\_date, amount)
+\end{itemize}
+
+\textbf{Relationships:}
+\begin{itemize}[leftmargin=1.5em]
+    \item Owns(Customer, Car): one customer can own many cars
+    \item Has\_Accident(Car, Accident): one car can have many accidents
+    \item Covers(Policy, Car): many-to-many
+    \item Has\_Payment(Policy, Payment): one policy has many payments
+\end{itemize}
+
+\newpage
+\textbf{Question 2}\\
+Analyze, solve, and present the solution of Problem 6.2.
+
+\textbf{Answer:}
+
+\textbf{(a) Using a ternary relationship with Exam as an entity}
+
+\insertdiagram{q6_2a.png}{E-R diagram for Problem 6.2(a)}
+
+The required entity sets are:
+\begin{itemize}[leftmargin=1.5em]
+    \item Student (\underline{student\_id}, name)
+    \item Course (\underline{course\_id}, title)
+    \item Section (\underline{section\_id}, sec\_id, semester, year)
+    \item Exam (\underline{exam\_id}, exam\_type, exam\_date, max\_marks)
+\end{itemize}
+
+A ternary relationship \textbf{Marks(Student, Section, Exam)} is used with attribute \textbf{score}.  
+This is appropriate because a student's mark depends on the student, the section, and the exam together.
+
+\textbf{(b) Using only a binary relationship between Student and Section}
+
+\insertdiagram{q6_2b.png}{E-R diagram for Problem 6.2(b)}
+
+A suitable design is to introduce:
+\begin{itemize}[leftmargin=1.5em]
+    \item Enrollment (\underline{enrollment\_id}, student\_id, section\_id)
+    \item Exam (\underline{exam\_id}, section\_id, exam\_type, exam\_date, max\_marks)
+    \item Exam\_Result (enrollment\_id, exam\_id, score)
+\end{itemize}
+
+This design keeps one binary student-section relationship while allowing multiple exam results.
+
+\textbf{Question 3}\\
+Analyze, solve, and present the solution of Problem 6.3.
+
+\textbf{Answer:}
+
+\insertdiagram{q6_3.png}{E-R diagram for Problem 6.3}
+
+For the sports team scoring system, the main entity sets are:
+\begin{itemize}[leftmargin=1.5em]
+    \item Team (\underline{team\_id}, name, city)
+    \item Player (\underline{player\_id}, name, position, jersey\_no)
+    \item Match (\underline{match\_id}, match\_date, venue, opponent, team\_score, opponent\_score)
+\end{itemize}
+
+A relationship \textbf{Participation(Player, Match)} stores match-specific statistics such as:
+\begin{itemize}[leftmargin=1.5em]
+    \item minutes\_played
+    \item started\_flag
+    \item goals
+    \item assists
+    \item penalty\_goals
+    \item own\_goals
+\end{itemize}
+
+Derived values such as total goals, total assists, and total wins should be computed from the stored data.
+
+\textbf{Question 4}\\
+Analyze, solve, and present the solution of Problem 6.5.
+
+\textbf{Answer:}
+
+\textbf{(a) Disconnected graph:}  
+A disconnected E-R graph means that two or more parts of the design are not linked by any relationship. This may indicate either independent subdomains or a missing relationship.
+
+\textbf{(b) Cycle in a graph:}  
+A cycle means that by traversing relationships, it is possible to return to the same entity set. This is not necessarily an error; it often reflects valid semantic connections.
+
+\textbf{Question 5}\\
+Analyze, solve, and present the solution of Problem 6.7.
+
+\textbf{Answer:}
+
+A weak entity should not always be converted into a strong entity because doing so introduces redundancy and hides existence dependence.
+
+\textbf{Example:}
+\begin{itemize}[leftmargin=1.5em]
+    \item Employee (\underline{emp\_id}, name)
+    \item Dependent is a weak entity identified through Employee
+\end{itemize}
+
+If Dependent is converted into a strong entity as  
+Dependent(emp\_id, dependent\_name, age),  
+then emp\_id must be repeated for every dependent.
+
+Therefore, weak entities are useful because they clearly represent:
+\begin{itemize}[leftmargin=1.5em]
+    \item existence dependence
+    \item identification through the owner
+    \item cleaner conceptual modeling
+\end{itemize}
+
+\textbf{Question 6}\\
+Analyze, solve, and present the solution of Problem 6.9.
+
+\textbf{Answer:}
+
+Suppose the relation is:
+advisor(s\_ID, i\_ID)
+
+To make the advisor relationship one-to-one:
+\begin{itemize}[leftmargin=1.5em]
+    \item each student must have at most one instructor
+    \item each instructor must advise at most one student
+\end{itemize}
+
+So:
+\begin{itemize}[leftmargin=1.5em]
+    \item s\_ID must be unique
+    \item i\_ID must also be unique
+\end{itemize}
+
+A suitable relational form is:
+advisor(s\_ID PRIMARY KEY, i\_ID UNIQUE)
+
+\newpage
+\textbf{Question 7}\\
+Analyze, solve, and present the solution of Problem 6.13*.
+
+\textbf{Answer:}
+
+\insertdiagram{q6_13.png}{Temporal E-R design for Problem 6.13}
+
+To represent temporal information, valid time should be associated with entities, attributes, and relationship sets.
+
+\textbf{Temporal design:}
+\begin{itemize}[leftmargin=1.5em]
+    \item Student(student\_id, entity\_valid\_time)
+    \item Instructor(instructor\_id, entity\_valid\_time)
+    \item Advisor(student\_id, instructor\_id, valid\_time)
+\end{itemize}
+
+Temporal attributes may be represented separately, such as:
+\begin{itemize}[leftmargin=1.5em]
+    \item Student\_Name(student\_id, name, valid\_time)
+    \item Student\_TotCred(student\_id, tot\_cred, valid\_time)
+    \item Instructor\_Name(instructor\_id, name, valid\_time)
+    \item Instructor\_Salary(instructor\_id, salary, valid\_time)
+\end{itemize}
+
+\textbf{Reduction to relations:}
+\begin{itemize}[leftmargin=1.5em]
+    \item Student(student\_id, entity\_valid\_from, entity\_valid\_to)
+    \item Instructor(instructor\_id, entity\_valid\_from, entity\_valid\_to)
+    \item Student\_Name(student\_id, valid\_from, name, valid\_to)
+    \item Student\_TotCred(student\_id, valid\_from, tot\_cred, valid\_to)
+    \item Instructor\_Name(instructor\_id, valid\_from, name, valid\_to)
+    \item Instructor\_Salary(instructor\_id, valid\_from, salary, valid\_to)
+    \item Advisor(student\_id, instructor\_id, valid\_from, valid\_to)
+\end{itemize}
+
+\textbf{Question 8}\\
+Analyze, solve, and present the solution of Problem 6.14.
+
+\textbf{Answer:}
+
+\textbf{Superkey:} any set of attributes that uniquely identifies a tuple.
+
+\textbf{Candidate key:} a minimal superkey.
+
+\textbf{Primary key:} the candidate key selected as the main identifier.
+
+\textbf{Example:}  
+If Student(ID, email, name) has both ID and email unique, then:
+\begin{itemize}[leftmargin=1.5em]
+    \item ID is a candidate key
+    \item email is also a candidate key
+    \item (ID, email) is a superkey but not a candidate key
+\end{itemize}
+
+If ID is chosen as the main identifier, then it is the primary key.
+
+\textbf{Question 9}\\
+Analyze, solve, and present the solution of Problem 6.15.
+
+\textbf{Answer:}
+
+\insertdiagram{q6_15.png}{E-R diagram for Problem 6.15}
+
+The hospital database may be modeled using:
+\begin{itemize}[leftmargin=1.5em]
+    \item Patient (\underline{patient\_id}, name, dob, sex, address, phone, blood\_group)
+    \item Doctor (\underline{doctor\_id}, name, specialization, phone, department)
+    \item Test\_Exam (\underline{log\_id}, test\_type, test\_date, result\_summary, notes)
+\end{itemize}
+
+Relationships:
+\begin{itemize}[leftmargin=1.5em]
+    \item For\_Patient(Test\_Exam, Patient)
+    \item Conducted\_By(Test\_Exam, Doctor)
+\end{itemize}
+
+This model is clean because each test or examination is treated as an entity.
+
+\textbf{Question 10}\\
+Analyze, solve, and present the solution of Problem 6.19.
+
+\textbf{Answer:}
+
+Weak entities remain useful even when they can be transformed into strong entities because they naturally express:
+\begin{itemize}[leftmargin=1.5em]
+    \item existence dependence
+    \item identification relative to an owner entity
+    \item better conceptual clarity
+    \item avoidance of artificial keys
+\end{itemize}
+
+Therefore, weak entities are important for semantic modeling.
+
+\newpage
+\textbf{Question 11}\\
+Analyze, solve, and present the solution of Problem 6.21.
+
+\textbf{Answer:}
+
+\textbf{(a) Add Blu-ray discs and downloadable video}
+
+\insertdiagram{q6_21a.png}{Extended E-R diagram for Problem 6.21(a)}
+
+A suitable extension is:
+\begin{itemize}[leftmargin=1.5em]
+    \item Video\_Work(video\_id, title, year, category)
+    \item BluRay\_Video(video\_id, price, region\_code)
+    \item Download\_Video(video\_id, price, file\_format, drm\_type)
+\end{itemize}
+
+This allows the same content to exist in one or both formats with separate prices.
+
+\textbf{(b) Allow shopping basket to contain books and video items}
+
+\insertdiagram{q6_21b.png}{Extended E-R diagram for Problem 6.21(b)}
+
+Introduce:
+\begin{itemize}[leftmargin=1.5em]
+    \item Store\_Item(item\_id, title)
+\end{itemize}
+
+Subclasses:
+\begin{itemize}[leftmargin=1.5em]
+    \item Book(item\_id, ISBN, year, price)
+    \item BluRay(item\_id, price)
+    \item DownloadVideo(item\_id, price)
+\end{itemize}
+
+Then replace:
+contains(shopping\_basket, book)
+
+with:
+contains(shopping\_basket, store\_item, quantity)
+
+\textbf{Question 12}\\
+Analyze, solve, and present the solution of Problem 6.22 (ER diagram only).
+
+\textbf{Answer:}
+
+\insertdiagram{q6_22.png}{E-R diagram for Problem 6.22}
+
+A suitable design includes:
+\begin{itemize}[leftmargin=1.5em]
+    \item Brand(brand\_id, brand\_name)
+    \item Model(model\_id, brand\_id, model\_name, model\_year, body\_style, base\_price)
+    \item Option(option\_id, option\_name, description, option\_price)
+    \item Vehicle(VIN, model\_id, color, manufacture\_date, status)
+    \item Dealer(dealer\_id, name, address, phone)
+    \item Sales\_Staff(staff\_id, dealer\_id, name, phone)
+    \item Customer(customer\_id, name, address, phone, email)
+    \item Sales\_Order(order\_id, customer\_id, dealer\_id, staff\_id, VIN, order\_date, agreed\_price, order\_status)
+\end{itemize}
+
+Relationships:
+\begin{itemize}[leftmargin=1.5em]
+    \item Brand has many Models
+    \item Model offers many Options
+    \item Vehicle is an instance of one Model
+    \item Vehicle may have many selected Options
+    \item Dealer inventories Vehicles
+    \item Dealer employs Sales\_Staff
+    \item Customer places Sales\_Orders
+    \item Sales\_Staff handles Sales\_Orders
+\end{itemize}
+
+\textbf{Question 13}\\
+Analyze, solve, and present the solution of Problem 6.23 (ER diagram only).
+
+\textbf{Answer:}
+
+\insertdiagram{q6_23.png}{E-R diagram for Problem 6.23}
+
+A suitable design includes:
+\begin{itemize}[leftmargin=1.5em]
+    \item Customer(customer\_id, name, address, phone, email)
+    \item Shipment(shipment\_id, sender\_id, receiver\_id, ship\_date, service\_type)
+    \item Package(tracking\_no, shipment\_id, weight, dimensions, status)
+    \item Location(location\_id, location\_type, description)
+    \item Truck(location\_id, registration\_no, route\_name)
+    \item Plane(location\_id, tail\_no, airline\_code)
+    \item Airport(location\_id, airport\_code, city, country)
+    \item Warehouse(location\_id, warehouse\_code, address)
+    \item Package\_Tracking(tracking\_event\_id, tracking\_no, location\_id, event\_time, event\_status)
+\end{itemize}
+
+Key idea: the current location of a package is the most recent tracking record.
+
+\textbf{Question 14}\\
+Analyze, solve, and present the solution of Problem 6.24 (ER diagram only).
+
+\textbf{Answer:}
+
+\insertdiagram{q6_24.png}{E-R diagram for Problem 6.24}
+
+A suitable airline database design includes:
+\begin{itemize}[leftmargin=1.5em]
+    \item Airport(airport\_code, name, city, country)
+    \item Aircraft(aircraft\_id, model, seat\_capacity)
+    \item Flight\_Route(route\_id, flight\_no, origin\_code, destination\_code, scheduled\_duration)
+    \item Flight\_Instance(instance\_id, route\_id, aircraft\_id, departure\_time, arrival\_time, status)
+    \item Passenger(passenger\_id, name, phone, email, passport\_no)
+    \item Booking(booking\_id, passenger\_id, instance\_id, seat\_no, booking\_class, booking\_status)
+    \item Crew\_Member(crew\_id, name, role)
+    \item Crew\_Assignment(crew\_id, instance\_id, duty)
+\end{itemize}
+
+Relationships:
+\begin{itemize}[leftmargin=1.5em]
+    \item A flight route has an origin airport and a destination airport
+    \item A flight instance is a scheduled occurrence of a flight route
+    \item An aircraft is assigned to a flight instance
+    \item A passenger books a flight instance
+    \item Crew members are assigned to flight instances
+\end{itemize}
+
+\newpage
+\textbf{Question 15}\\
+Analyze, solve, and present the solution of Problem 6.26.
+
+\textbf{Answer:}
+
+\insertdiagram{q6_26.png}{Specialization hierarchy for Problem 6.26}
+
+A suitable generalization/specialization hierarchy is:
+
+Motor\_Vehicle $\rightarrow$ Motorcycle, Passenger\_Car, Van, Bus
+
+\textbf{Superclass attributes:}
+\begin{itemize}[leftmargin=1.5em]
+    \item VIN
+    \item brand
+    \item model
+    \item model\_year
+    \item color
+    \item engine\_no
+    \item fuel\_type
+    \item price
+\end{itemize}
+
+\textbf{Subclass-specific attributes:}
+
+\textbf{Motorcycle:}
+\begin{itemize}[leftmargin=1.5em]
+    \item engine\_capacity\_cc
+    \item bike\_type
+    \item has\_sidecar
+\end{itemize}
+
+\textbf{Passenger\_Car:}
+\begin{itemize}[leftmargin=1.5em]
+    \item number\_of\_doors
+    \item trunk\_capacity
+    \item body\_style
+\end{itemize}
+
+\textbf{Van:}
+\begin{itemize}[leftmargin=1.5em]
+    \item cargo\_volume
+    \item payload\_capacity
+    \item sliding\_door\_flag
+\end{itemize}
+
+\textbf{Bus:}
+\begin{itemize}[leftmargin=1.5em]
+    \item seating\_capacity
+    \item standing\_capacity
+    \item route\_service\_type
+\end{itemize}
+
+This placement is appropriate because common attributes stay in the superclass while specialized attributes remain in the subclasses.
+
+\end{document}

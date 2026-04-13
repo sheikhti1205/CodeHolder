@@ -1,0 +1,724 @@
+\documentclass[12pt,a4paper]{article}
+
+%\usepackage[margin=1in]{geometry}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\lstset{
+  language=SQL,
+  basicstyle=\ttfamily\small,
+  frame=single,
+  breaklines=true,
+  showstringspaces=false,
+  columns=fullflexible
+}
+
+\begin{document}
+
+\section*{Chapter 1}
+
+\subsection*{Question 1}
+The following SELECT statement executes successfully:
+\begin{lstlisting}
+    SELECT  last_name,
+            job_id,
+            salary AS Sal
+    FROM    employees;
+\end{lstlisting}
+
+\textbf{Answer:} 
+
+Yes, the statement executes successfully.
+
+\subsection*{Question 2}
+The following SELECT statement executes successfully:
+\begin{lstlisting}
+    SELECT  *
+    FROM    job_grades;
+\end{lstlisting}
+
+\textbf{Answer:}
+
+No, the statement does not execute successfully because the table \texttt{job\_grades} does not exist (in the given schema/environment).
+
+\subsection*{Question 3}
+There are four coding errors in the following statement. Can you identify them?
+\begin{lstlisting}
+    SELECT  employee_id, last_name
+        sal x 12 ANNUAL SALARY
+    FROM    employees;
+\end{lstlisting}
+
+\textbf{Answer:}
+    \textbf{Errors:}
+        \begin{enumerate}
+            \item Missing comma after \texttt{last\_name}.
+            \item \texttt{sal} is not a valid column name, it should be \texttt{salary}.
+            \item \texttt{x} is invalid for multiplication, we need to use \texttt{*}.
+            \item Alias \texttt{ANNUAL SALARY} must be enclosed in double quotes: \texttt{AS "ANNUAL SALARY"}.
+        \end{enumerate}
+
+\textbf{Correct query:}
+\begin{lstlisting}
+    SELECT  employee_id, last_name,
+    salary  * 12 AS "ANNUAL SALARY"
+    FROM    employees;
+\end{lstlisting}
+
+\subsection*{Question 4}
+Your first task is to determine the structure of the \texttt{DEPARTMENTS} table and its contents.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        DESCRIBE    departments;
+        SELECT  *
+        FROM    departments;
+    \end{lstlisting}
+
+\subsection*{Question 5}
+The HR department wants a query to display the last name, job ID, hire date,and employee ID 
+for each employee, with the employee ID appearing first. 
+Provide an alias STARTDATE for the \texttt{HIRE\_DATE} column. 
+Save your SQL statement to a file named \texttt{lab\_01\_05.sql} so that you can 
+dispatch this file to the HR department.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT  employee_id, last_name, job_id, 
+        hire_date AS STARTDATE
+        FROM employees;
+    \end{lstlisting}
+
+\subsection*{Question 6}
+Test your query in the \texttt{lab\_01\_05.sql} file to ensure that it runs correctly.
+Note: After you have executed the query, make sure that you do not enter 
+your next query in the same worksheet. Open a new worksheet.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        To open a new worksheet: CTRL + SHIFT + N
+    \end{lstlisting}
+
+\subsection*{Question 7}
+The HR department wants a query to display all unique job IDs from the EMPLOYEES table.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT DISTINCT job_id
+        FROM employees;
+    \end{lstlisting}
+
+\subsection*{Question 8}
+The HR department wants more descriptive column headings for its report on employees. 
+Copy the statement from \texttt{lab\_01\_05.sql} to a new SQL Worksheet. Name the column headings 
+\texttt{Emp \#}, \texttt{Employee}, \texttt{Job}, and \texttt{Hire Date}, respectively. Then run your query again.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT employee_id AS "Emp #",
+        last_name AS "Employee",
+        job_id AS "Job",
+        hire_date AS "Hire Date"
+        FROM employees;
+    \end{lstlisting}
+
+\newpage
+\subsection*{Question 9}
+The HR department has requested a report of all employees and their job IDs. Display the last 
+name concatenated with the job ID (separated by a comma and space) and name the column 
+\texttt{Employee and Title}.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name || ', ' || job_id AS "Employee and Title"
+        FROM employees;
+    \end{lstlisting}
+
+\subsection*{Question 10}
+To familiarize yourself with the data in the \texttt{EMPLOYEES} table, create a query to display all the 
+data from that table. Separate each column output by a comma. Name the column title 
+\texttt{THE\_OUTPUT}.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT employee_id || ',' || first_name || ',' || last_name || ',' ||
+        email || ',' || phone_number || ',' || job_id || ',' ||
+        manager_id || ',' || hire_date || ',' || salary || ',' ||
+        commission_pct || ',' || department_id AS "THE_OUTPUT"
+        FROM employees;
+    \end{lstlisting}
+
+\section*{Chapter 2}
+
+\subsection*{Question 1}
+Because of budget issues, the HR department needs a report that displays the last name and 
+salary of employees who earn more than \$12,000. Save your SQL statement as a file named 
+\texttt{lab\_02\_01.sql}. Run your query.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name, salary
+        FROM employees
+        WHERE salary > 12000;
+    \end{lstlisting}
+
+\subsection*{Question 2}
+Open a new SQL Worksheet. Create a report that displays the last name and department number 
+for employee number 176. Run the query.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name, department_id
+        FROM EMPLOYEES
+        WHERE employee_id = 176;
+    \end{lstlisting}
+
+\subsection*{Question 3}
+The HR department needs to find high-salary and low-salary employees. 
+Modify \texttt{lab\_02\_01.sql} to display the last name and salary for any employee whose salary is not in 
+the range of \$5,000 to \$12,000. Save your SQL statement as \texttt{lab\_02\_03.sql}.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name, salary
+        FROM EMPLOYEES
+        WHERE salary NOT BETWEEN 5000 AND 12000;
+    \end{lstlisting}
+
+\subsection*{Question 4}
+Create a report to display the last name, job ID, and hire date for employees with the last names 
+of Matos and Taylor. Order the query in ascending order by the hire date.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name, job_id, hire_date
+        FROM employees
+        WHERE last_name IN ('Matos', 'Taylor')
+        ORDER BY hire_date ASC;
+    \end{lstlisting}
+
+\subsection*{Question 5}
+Display the last name and department ID of all employees in departments 20 or 50 in ascending 
+alphabetical order by name.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name, department_id
+        FROM employees
+        WHERE department_id IN (20, 50)
+        ORDER BY last_name ASC;
+    \end{lstlisting}
+
+\subsection*{Question 6}
+Modify \texttt{lab\_02\_03.sql} to display the last name and salary of employees who earn between 
+\$5,000 and \$12,000, and are in department 20 or 50. Label the columns Employee and 
+Monthly Salary, respectively. Resave \texttt{lab\_02\_03.sql} as \texttt{lab\_02\_06.sql}. Run the 
+statement in \texttt{lab\_02\_06.sql}.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name AS "Employee",
+        salary AS "Monthly Salary"
+        FROM employees
+        WHERE salary BETWEEN 5000 AND 12000
+        AND department_id IN (20, 50);
+    \end{lstlisting}
+
+\subsection*{Question 7}
+The HR department needs a report that displays the last name and hire date for all employees 
+who were hired in 1994.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name, hire_date
+        FROM employees
+        WHERE TO_CHAR(hire_date, 'YYYY') = '1994';
+    \end{lstlisting}
+
+\subsection*{Question 8}
+Create a report to display the last name and job title of all employees who do not have a 
+manager.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name, job_id
+        FROM employees
+        WHERE manager_id IS NULL;
+    \end{lstlisting}
+
+\subsection*{Question 9}
+Create a report to display the last name, salary, and commission of all employees who earn 
+commissions. Sort data in descending order of salary and commissions.
+Use the column’s numeric position in the ORDER BY clause.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name, salary, commission_pct
+        FROM employees
+        WHERE commission_pct IS NOT NULL
+        ORDER BY 2 DESC, 3 DESC;
+    \end{lstlisting}
+
+\subsection*{Question 10}
+Members of the HR department want to have more flexibility with the queries that you are 
+writing. They would like a report that displays the last name and salary of employees who earn 
+more than an amount that the user specifies after a prompt. Save this query to a file named 
+\texttt{lab\_02\_10.sql}. If you enter 12000 when prompted, the report displays the following 
+results:
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name, salary
+        FROM employees
+        WHERE salary > &amount;
+    \end{lstlisting}
+
+\subsection*{Question 11}
+The HR department wants to run reports based on a manager. Create a query that prompts the 
+user for a manager ID and generates the employee ID, last name, salary, and department for 
+that manager’s employees. The HR department wants the ability to sort the report on a selected 
+column. You can test the data with the following values:
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT employee_id, last_name, salary, department_id
+        FROM employees
+        WHERE manager_id = &manager_id
+        ORDER BY &sort_column;
+    \end{lstlisting}
+
+\subsection*{Question 12}
+Display all employee last names in which the third letter of the name is “a.”
+
+\textbf{Answer}
+    \begin{lstlisting}
+        SELECT last_name
+        FROM employees
+        WHERE last_name LIKE '__a%';
+    \end{lstlisting}
+
+\subsection*{Question 13}
+Display the last names of all employees who have both an “a” and an “e” in their last name.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name
+        FROM employees
+        WHERE last_name LIKE '%a%'
+        AND last_name LIKE '%e%';
+    \end{lstlisting}
+
+\subsection*{Question 14}
+Display the last name, job, and salary for all employees whose jobs are either those of a sales 
+representative or of a stock clerk, and whose salaries are not equal to \$2,500, \$3,500, or \$7,000.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name, job_id, salary
+        FROM employees
+        WHERE job_id IN ('SA_REP', 'ST_CLERK')
+        AND salary NOT IN (2500, 3500, 7000);
+    \end{lstlisting}
+
+\subsection*{Question 15}
+Modify \texttt{lab\_02\_06.sql} to display the last name, salary, and commission for all employees 
+whose commission is 20\%. Resave \texttt{lab\_02\_06.sql} as \texttt{lab\_02\_15.sql}. Rerun the 
+statement in \texttt{lab\_02\_15.sql}.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name AS "Employee",
+        salary AS "Monthly Salary",
+        commission_pct
+        FROM employees
+        WHERE commission_pct = 0.2;
+    \end{lstlisting}
+
+\section*{Chapter 3}
+
+\subsection*{Question 1}
+Write a query to display the system date. Label the column as Date.
+Note: If your database is remotely located in a different time zone, the output will be the date 
+for the operating system on which the database resides.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT SYSDATE AS "Date"
+        FROM dual;
+    \end{lstlisting}
+
+\subsection*{Question 2}
+The HR department needs a report to display the employee number, last name, salary, and 
+salary increased by 15.5\% (expressed as a whole number) for each employee. Label the column 
+\texttt{New Salary}. Save your SQL statement in a file named \texttt{lab\_03\_02.sql}.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT employee_id,
+        last_name,
+        salary,
+        ROUND(salary * 1.155) AS "New Salary"
+        FROM employees;
+    \end{lstlisting}
+
+\subsection*{Question 3}
+Run your query in the \texttt{lab\_03\_02.sql} file.
+\textbf{Answer:}
+        We can run the following command\: \texttt{@lab\_03\_02.sql}
+
+\subsection*{Question 4}
+Modify your query \texttt{lab\_03\_02.sql} to add a column that subtracts the old salary from the 
+new salary. Label the column \texttt{Increase}. Save the contents of the file as \texttt{lab\_03\_04.sql}. 
+Run the revised query.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT employee_id,
+        last_name,
+        salary,
+        ROUND(salary * 1.155) AS "New Salary",
+        ROUND((salary * 1.155) - salary) AS "Increase"
+        FROM employees;
+    \end{lstlisting}
+
+\subsection*{Question 5}
+Write a query that displays the last name (with the first letter in uppercase and all the other 
+letters in lowercase) and the length of the last name for all employees whose name starts with 
+the letters “J,” “A,” or “M.” Give each column an appropriate label. Sort the results by the 
+employees’ last names.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT INITCAP(last_name) AS "Name",
+        LENGTH(last_name) AS "Length"
+        FROM employees
+        WHERE last_name LIKE 'J%'
+        OR last_name LIKE 'A%'
+        OR last_name LIKE 'M%'
+        ORDER BY last_name;
+    \end{lstlisting}
+
+Rewrite the query so that the user is prompted to enter a letter that the last name starts with. For 
+example, if the user enters “H” (capitalized) when prompted for a letter, then the output should 
+show all employees whose last name starts with the letter “H.”
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT INITCAP(last_name) AS "Name",
+        LENGTH(last_name) AS "Length"
+        FROM employees
+        WHERE last_name LIKE '&start_letter%'
+        ORDER BY last_name;
+    \end{lstlisting}
+
+Modify the query such that the case of the entered letter does not affect the output. The entered 
+letter must be capitalized before being processed by the \texttt{SELECT} query.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT INITCAP(last_name) AS "Name",
+        LENGTH(last_name) AS "Length"
+        FROM employees
+        WHERE last_name LIKE UPPER('&start_letter') || '%'
+        ORDER BY last_name;
+    \end{lstlisting}
+
+\subsection*{Question 6}
+The HR department wants to find the duration of employment for each employee. For each 
+employee, display the last name and calculate the number of months between today and the 
+date on which the employee was hired. Label the column as \texttt{MONTHS\_WORKED}. Order your 
+results by the number of months employed. Round the number of months up to the closest 
+whole number.
+Note: Because this query depends on the date when it was executed, the values in the 
+\texttt{MONTHS\_WORKED} column will differ for you.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name,
+        CEIL(MONTHS_BETWEEN(SYSDATE, hire_date)) AS "MONTHS_WORKED"
+        FROM employees
+        ORDER BY "MONTHS_WORKED";
+    \end{lstlisting}
+
+\subsection*{Question 7}
+Create a query to display the last name and salary for all employees. Format the salary to be 15 
+characters long, left-padded with the \$ symbol. Label the column as \texttt{SALARY}.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name,
+        LPAD(salary, 15, '$') AS "SALARY"
+        FROM employees;
+    \end{lstlisting}
+
+\subsection*{Question 8}
+Create a query that displays the first eight characters of the employees’ last names and indicates 
+the amounts of their salaries with asterisks. Each asterisk signifies a thousand dollars. Sort the 
+data in descending order of salary. Label the column as 
+\texttt{EMPLOYEES\_AND\_THEIR\_SALARIES}.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT SUBSTR(last_name, 1, 8) || ' ' ||
+        RPAD('*', FLOOR(salary/1000), '*') AS "EMPLOYEES_AND_THEIR_SALARIES"
+        FROM employees
+        ORDER BY salary DESC;
+    \end{lstlisting}
+
+\subsection*{Question 9}
+Create a query to display the last name and the number of weeks employed for all employees in 
+department 90. Label the number of weeks column as \texttt{TENURE}. Truncate the number of weeks 
+value to 0 decimal places. Show the records in descending order of the employee’s tenure.
+Note: The \texttt{TENURE} value will differ as it depends on the date on which you run the query.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name,
+        TRUNC(MONTHS_BETWEEN(SYSDATE, hire_date) * 4) AS "TENURE"
+        FROM employees
+        WHERE department_id = 90
+        ORDER BY "TENURE" DESC;
+    \end{lstlisting}
+
+\section*{Chapter 4}
+
+\subsection*{Question 1}
+Create a report that produces the following for each employee:
+\texttt{<employee last name>} earns \texttt{<salary>} monthly 
+but wants \texttt{<3 times salary.>}. Label the column \texttt{Dream Salaries}.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name || ' earns $' || TO_CHAR(salary, '99,999.00') ||
+        ' monthly but wants $' || TO_CHAR(salary * 3, '99,999.00') AS "Dream Salaries"
+        FROM employees;
+    \end{lstlisting}
+
+\subsection*{Question 2}
+Display each employee’s last name, hire date, and salary review date, which is the first Monday 
+after six months of service. Label the column \texttt{REVIEW}. Format the dates to appear in the format 
+similar to “Monday, the Thirty-First of July, 2000.”
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name,
+        hire_date,
+        TO_CHAR(NEXT_DAY(ADD_MONTHS(hire_date, 6), 'MONDAY'),
+        'fmDay, "the" DDSPTH "of" fmMonth, YYYY') AS "REVIEW"
+        FROM employees;
+    \end{lstlisting}
+    
+\subsection*{Question 3}
+Display the last name, hire date, and day of the week on which the employee started. Label the 
+column DAY. Order the results by the day of the week, starting with Monday.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT last_name,
+        hire_date,
+        TO_CHAR(hire_date, 'DAY') AS "DAY"
+        FROM employees
+        ORDER BY TO_CHAR(hire_date, 'D');
+    \end{lstlisting}
+    
+\subsection*{Question 4}
+Create a query that displays the employees’ last names and commission amounts. If an employee 
+does not earn commission, show “No Commission.” Label the column \texttt{COMM}.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT  last_name,
+        NVL(TO_CHAR(salary * commission_pct), 'No Commission') AS "COMM"
+        FROM    employees;
+    \end{lstlisting}
+    
+\subsection*{Question 5}
+Using the \texttt{DECODE} function, write a query that displays the grade of all employees based on the 
+value of the column \texttt{JOB\_ID}, using the following data:
+    Job                 Grade
+    AD\_PRES             A
+    ST\_MAN              B
+    IT\_PROG             C
+    SA\_REP              D
+    ST\_CLERK            E
+    None of the above    0
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT job_id,
+        DECODE(job_id,
+              'AD_PRES', 'A',
+              'ST_MAN',  'B',
+              'IT_PROG', 'C',
+              'SA_REP',  'D',
+              'ST_CLERK','E',
+              '0') AS "GRADE"
+        FROM employees;
+    \end{lstlisting}
+    
+\subsection*{Question 6}
+Rewrite the statement in the preceding exercise using the CASE syntax.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT job_id,
+        CASE job_id
+            WHEN 'AD_PRES'  THEN 'A'
+            WHEN 'ST_MAN'   THEN 'B'
+            WHEN 'IT_PROG'  THEN 'C'
+            WHEN 'SA_REP'   THEN 'D'
+            WHEN 'ST_CLERK' THEN 'E'
+            ELSE '0'
+        END AS "GRADE"
+        FROM employees;
+    \end{lstlisting}
+    
+\section*{Chapter 5}
+
+\subsection*{Question 1}
+Group functions work across many rows to produce one result per group.
+True/False
+
+\textbf{Answer:}
+    True
+    Group functions like \texttt{SUM}, \texttt{AVG}, \texttt{MAX}, \texttt{MIN}, and \texttt{COUNT} operate on sets of rows and return a single result per group.
+
+\subsection*{Question 2}
+Group functions include nulls in calculations.
+True/False
+
+\textbf{Answer:}
+    False
+    Most group functions ignore nulls. For example, \texttt{AVG}, \texttt{SUM}, and \texttt{COUNT} skip null values unless you use \texttt{COUNT(*)}.
+
+\subsection*{Question 3}
+The \texttt{WHERE} clause restricts rows before inclusion in a group calculation.
+True/False
+
+\textbf{Answer:}
+    True
+    The \texttt{WHERE} clause filters rows before any grouping or aggregation happens.
+
+\subsection*{Question 4}
+Find the highest, lowest, sum, and average salary of all employees. Label the columns
+as \texttt{Maximum}, \texttt{Minimum}, \texttt{Sum}, and \texttt{Average}, respectively. Round your results to the nearest 
+whole number. Save your SQL statement as \texttt{lab\_05\_04.sql}. Run the query.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT ROUND(MAX(salary)) AS "Maximum",
+        ROUND(MIN(salary)) AS "Minimum",
+        ROUND(SUM(salary)) AS "Sum",
+        ROUND(AVG(salary)) AS "Average"
+        FROM employees;
+    \end{lstlisting}
+
+\subsection*{Question 5}
+Modify the query in \texttt{lab\_05\_04.sql} to display the minimum, maximum, sum, and average 
+salary for each job type. Resave \texttt{lab\_05\_04.sql} as \texttt{lab\_05\_05.sql}. Run the statement 
+in \texttt{lab\_05\_05.sql}.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT job_id,
+        ROUND(MAX(salary)) AS "Maximum",
+        ROUND(MIN(salary)) AS "Minimum",
+        ROUND(SUM(salary)) AS "Sum",
+        ROUND(AVG(salary)) AS "Average"
+        FROM employees
+        GROUP BY job_id;
+    \end{lstlisting}
+    
+\subsection*{Question 6}
+Write a query to display the number of people with the same job.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT job_id,
+        COUNT(*) AS "COUNT"
+        FROM employees
+        GROUP BY job_id;
+    \end{lstlisting}
+
+Generalize the query so that the user in the HR department is prompted for a job title. Save the script 
+to a file named \texttt{lab\_05\_06.sql}. Run the query. Enter \texttt{IT\_PROG} when prompted.
+
+    \begin{lstlisting}
+        SELECT job_id,
+        COUNT(*) AS "COUNT"
+        FROM employees
+        WHERE job_id = '&job_title'
+        GROUP BY job_id;
+    \end{lstlisting}
+    
+\subsection*{Question 7}
+Determine the number of managers without listing them. Label the column as \texttt{Number of Managers}. Hint: Use the \texttt{MANAGER\_ID} column to determine the number of managers.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT COUNT(DISTINCT manager_id) AS "Number of Managers"
+        FROM employees;
+    \end{lstlisting}
+    
+\subsection*{Question 8}
+Find the difference between the highest and lowest salaries. Label the column \texttt{DIFFERENCE}.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT (MAX(salary) - MIN(salary)) AS "DIFFERENCE"
+        FROM employees;
+    \end{lstlisting}
+    
+\subsection*{Question 9}
+Create a report to display the manager number and the salary of the lowest-paid employee for 
+that manager. Exclude anyone whose manager is not known. Exclude any groups where the 
+minimum salary is \$6,000 or less. Sort the output in descending order of salary.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT manager_id,
+        MIN(salary) AS "MIN_SALARY"
+        FROM employees
+        WHERE manager_id IS NOT NULL
+        GROUP BY manager_id
+        HAVING MIN(salary) > 6000
+        ORDER BY MIN(salary) DESC;
+    \end{lstlisting}
+    
+\subsection*{Question 10}
+Create a query to display the total number of employees and, of that total, the number of 
+employees hired in 1995, 1996, 1997, and 1998. Create appropriate column headings.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT COUNT(*) AS "TOTAL",
+        SUM(CASE WHEN TO_CHAR(hire_date, 'YYYY') = '1995' THEN 1 ELSE 0 END) AS "1995",
+        SUM(CASE WHEN TO_CHAR(hire_date, 'YYYY') = '1996' THEN 1 ELSE 0 END) AS "1996",
+        SUM(CASE WHEN TO_CHAR(hire_date, 'YYYY') = '1997' THEN 1 ELSE 0 END) AS "1997",
+        SUM(CASE WHEN TO_CHAR(hire_date, 'YYYY') = '1998' THEN 1 ELSE 0 END) AS "1998"
+        FROM employees;
+    \end{lstlisting}
+    
+\subsection*{Question 11}
+Create a matrix query to display the job, the salary for that job based on department number, 
+and the total salary for that job, for departments 20, 50, 80, and 90, giving each column an 
+appropriate heading.
+
+\textbf{Answer:}
+    \begin{lstlisting}
+        SELECT job_id,
+        SUM(CASE WHEN department_id = 20 THEN salary END) AS "Dept 20",
+        SUM(CASE WHEN department_id = 50 THEN salary END) AS "Dept 50",
+        SUM(CASE WHEN department_id = 80 THEN salary END) AS "Dept 80",
+        SUM(CASE WHEN department_id = 90 THEN salary END) AS "Dept 90",
+        SUM(salary) AS "Total"
+        FROM employees
+        WHERE department_id IN (20, 50, 80, 90)
+        GROUP BY job_id;
+    \end{lstlisting}
+    
+\end{document}

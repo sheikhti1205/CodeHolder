@@ -1,0 +1,68 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{shapes.multipart, positioning, arrows.meta} % Essential libraries for ER diagrams
+
+% Custom arrow styles for relationships (1:1, 1:N, N:M)
+\tikzset{
+  erArrow/.style={->, >=Stealth, thick}, % Base arrow style
+  oneToOne/.style={erArrow, -{Straight Barb[angle=60:3pt]}}, % 1:1 (single bar)
+  oneToMany/.style={erArrow, -{Straight Barb[reversed, angle=60:3pt]}}, % 1:N (crow's foot)
+  manyToMany/.style={erArrow, -{Straight Barb[reversed, angle=60:3pt] -{Straight Barb[reversed, angle=60:3pt]}}} % N:M (double crow's foot)
+}
+
+\begin{document}
+
+\begin{figure}[ht]
+  \centering
+  \begin{tikzpicture}[
+    node distance=2.5cm, % Spacing between nodes
+    entity/.style={rectangle, draw=blue!70, fill=blue!20, thick, minimum width=1.5cm, minimum height=1cm, align=center}, % Entity style (rectangles)
+    attribute/.style={ellipse, draw=green!70, fill=green!20, thick, minimum width=1cm, minimum height=0.8cm, align=center}, % Attribute style (ovals)
+    compositeAttr/.style={attribute, dashed}, % Composite attributes (dashed ovals)
+    primaryKey/.style={attribute, font=\bfseries, draw=red!70}, % Primary keys (bold, red)
+    relationship/.style={diamond, draw=orange!70, fill=orange!20, thick, minimum width=1.2cm, minimum height=1cm, align=center} % Relationship style (diamonds)
+  ]
+
+  % ---------------------- ENTITIES ----------------------
+  % Artifact Entity (core entity for artworks)
+  \node[entity] (artifact) {Artifact};
+  % Institution Entity (owns artifacts)
+  \node[entity, below left=of artifact] (institution) {Institution};
+  % Acquisition Record Entity (tracks acquisition details)
+  \node[entity, below right=of artifact] (acquisition) {Acquisition Record};
+
+  % ---------------------- ATTRIBUTES ----------------------
+  % Artifact Attributes
+  \node[primaryKey, above=of artifact] (artifactId) {Item ID} edge (artifact); % Primary Key
+  \node[attribute, above left=of artifact] (title) {Title} edge (artifact);
+  \node[attribute, above right=of artifact] (type) {Type} edge (artifact);
+  % Composite Attribute: Size (height, width, weight)
+  \node[compositeAttr, left=of artifact] (size) {Size} edge (artifact);
+  \node[attribute, below left=of size] (height) {Height} edge (size);
+  \node[attribute, below=of size] (width) {Width} edge (size);
+  \node[attribute, below right=of size] (weight) {Weight} edge (size);
+
+  % Institution Attributes
+  \node[primaryKey, below left=of institution] (instId) {Institution ID} edge (institution); % Primary Key
+  \node[attribute, left=of institution] (instName) {Name} edge (institution);
+  \node[attribute, above left=of institution] (city) {City} edge (institution);
+  \node[attribute, below left=of institution] (country) {Country} edge (institution);
+
+  % Acquisition Record Attributes
+  \node[primaryKey, below right=of acquisition] (acqId) {Acquisition ID} edge (acquisition); % Primary Key
+  \node[attribute, right=of acquisition] (acqDate) {Date Acquired} edge (acquisition);
+  \node[attribute, above right=of acquisition] (source) {Source} edge (acquisition);
+  \node[attribute, below right=of acquisition] (cost) {Cost} edge (acquisition);
+
+  % ---------------------- RELATIONSHIPS ----------------------
+  % "Owned By" Relationship (Artifact → Institution: 1:N)
+  \node[relationship, below=of artifact] (ownedBy) {Owned By} edge [oneToMany] (artifact) edge [oneToMany] (institution);
+  % "Acquired Via" Relationship (Artifact → Acquisition Record: 1:1)
+  \node[relationship, right=of artifact] (acquiredVia) {Acquired Via} edge [oneToOne] (artifact) edge [oneToOne] (acquisition);
+
+  \end{tikzpicture}
+  \caption{ER Diagram for Museum Collection Management System}
+  \label{fig:museum-er}
+\end{figure}
+
+\end{document}

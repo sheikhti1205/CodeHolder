@@ -15,7 +15,7 @@ int main(){
         // Treat arr[0..i-1] as a sorted hand; insert arr[i] into its correct position.
         temp = arr[i];
         int j = i - 1;
-        while(j >= 0 && arr[j] > temp){
+        while(j >= 0 && arr[j] < temp){
             // Shift bigger elements right to make space for temp.
             arr[j + 1] = arr[j];
             j--;
