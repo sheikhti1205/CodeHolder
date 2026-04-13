@@ -1,15 +1,18 @@
 import pandas as pd
+import os
 import mysql.connector
 from mysql.connector import Error
 from collections import defaultdict
 
 # ========== CONFIGURATION ==========
-EXCEL_FILE = "sample.xlsx"
+# EXCEL_FILE = "sample.xlsx"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+EXCEL_FILE = os.path.join(BASE_DIR, "sample.xlsx")
 DB_CONFIG = {
     "host": "localhost",
     "user": "sheikh",          # change as needed
     "password": "miniso123",          # set your MySQL root password
-    "database": "PHARMA_DB"
+    "database": "PHARMA_DB_TASK1"
 }
 
 # ========== HELPER FUNCTIONS ==========
