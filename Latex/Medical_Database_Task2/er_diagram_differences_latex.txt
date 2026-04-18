@@ -1,0 +1,19 @@
+\subsection*{Difference Between The Two ER Diagrams}
+
+The first ER diagram is the preliminary version, while the second ER diagram is a more refined and simplified version of the same medical database design.
+
+\begin{enumerate}
+    \item \textbf{Company handling was simplified.} In the first ER diagram, \texttt{COMPANY} was modeled as a separate entity and \texttt{PRODUCT} was linked to it through the \texttt{PRODUCED BY} relationship. In the second ER diagram, \texttt{COMPANY NAME} is stored directly as an attribute of \texttt{PRODUCT}. This reduces one extra entity and one extra relationship.
+
+    \item \textbf{Drug interaction was simplified.} In the first ER diagram, \texttt{INTERACTS WITH} was shown as a recursive relationship on \texttt{DRUG}. In the second ER diagram, \texttt{INTERACTS WITH} is shown as a multivalued attribute of \texttt{DRUG}. This makes the design more compact because no extra relationship set is introduced at the ER level.
+
+    \item \textbf{The trial-disease connection was removed.} In the first ER diagram, \texttt{CLINICAL TRIAL} was connected to \texttt{DISEASE} through the \texttt{FOCUSES ON} relationship. In the second ER diagram, this relationship is removed. Instead, \texttt{CLINICAL TRIAL CONDITION} remains attached directly to \texttt{CLINICAL TRIAL}. This avoids overlap between disease data and trial-condition data.
+
+    \item \textbf{Redundant clinical-trial details were removed.} The first ER diagram included \texttt{PROGRESS}, \texttt{RECRUITMENT DETAIL}, and a separate \texttt{CLINICAL TRIAL INSTITUTION} attribute. These do not appear in the second ER diagram. The second version keeps only the more essential attributes such as title, status, start date, completion date, participants, condition, and address.
+
+    \item \textbf{Address representation became cleaner.} Both diagrams use \texttt{CLINICAL TRIAL ADDRESS} as a composite attribute. However, in the second ER diagram the design is cleaner because \texttt{INSTITUTION} is kept inside the address structure, and the separate \texttt{CLINICAL TRIAL INSTITUTION} attribute from the first diagram is removed.
+
+    \item \textbf{The core structure was preserved.} Important parts of the design remain the same in both diagrams. \texttt{DRUG}, \texttt{DISEASE}, \texttt{SIDE EFFECT}, \texttt{PRODUCT}, \texttt{RESEARCHER}, and \texttt{CLINICAL TRIAL} are still the main entities. Also, the relationships \texttt{STUDIES}, \texttt{TREATS}, \texttt{HAS}, \texttt{IS MARKETED AS}, and \texttt{CONDUCTED BY} remain in the second version.
+
+    \item \textbf{The second ER diagram is more compact and better organized.} Overall, the second diagram removes redundancy and avoids unnecessary entities and relationships. Because of that, it is easier to convert into a relational model with fewer relations, which matches the requirement of Task 2.
+\end{enumerate}

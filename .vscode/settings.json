@@ -5,7 +5,6 @@
         "random": "cpp",
         "span": "cpp"
     },
-    "python.defaultInterpreterPath": "C:\\Users\\sheik\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
     "python.terminal.activateEnvironment": false,
     "terminal.integrated.defaultProfile.windows": "PowerShell"
 }

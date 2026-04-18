@@ -1,0 +1,24 @@
+Difference Between The Two ER Diagrams
+
+The first ER diagram is the preliminary version, while the second ER diagram is a more refined and simplified version of the same medical database design.
+
+1. Company handling was simplified.
+In the first ER diagram, COMPANY was modeled as a separate entity and PRODUCT was linked to it through the PRODUCED BY relationship. In the second ER diagram, COMPANY NAME is stored directly as an attribute of PRODUCT. This reduces one extra entity and one extra relationship.
+
+2. Drug interaction was simplified.
+In the first ER diagram, INTERACTS WITH was shown as a recursive relationship on DRUG. In the second ER diagram, INTERACTS WITH is shown as a multivalued attribute of DRUG. This makes the design more compact because no extra relationship set is introduced at the ER level.
+
+3. The trial-disease connection was removed.
+In the first ER diagram, CLINICAL TRIAL was connected to DISEASE through the FOCUSES ON relationship. In the second ER diagram, this relationship is removed. Instead, CLINICAL TRIAL CONDITION remains attached directly to CLINICAL TRIAL. This avoids overlap between disease data and trial-condition data.
+
+4. Redundant clinical-trial details were removed.
+The first ER diagram included PROGRESS, RECRUITMENT DETAIL, and a separate CLINICAL TRIAL INSTITUTION attribute. These do not appear in the second ER diagram. The second version keeps only the more essential attributes such as title, status, start date, completion date, participants, condition, and address.
+
+5. Address representation became cleaner.
+Both diagrams use CLINICAL TRIAL ADDRESS as a composite attribute. However, in the second ER diagram the design is cleaner because INSTITUTION is kept inside the address structure, and the separate CLINICAL TRIAL INSTITUTION attribute from the first diagram is removed.
+
+6. The core structure was preserved.
+Important parts of the design remain the same in both diagrams. DRUG, DISEASE, SIDE EFFECT, PRODUCT, RESEARCHER, and CLINICAL TRIAL are still the main entities. Also, the relationships STUDIES, TREATS, HAS, IS MARKETED AS, and CONDUCTED BY remain in the second version.
+
+7. The second ER diagram is more compact and better organized.
+Overall, the second diagram removes redundancy and avoids unnecessary entities and relationships. Because of that, it is easier to convert into a relational model with fewer relations, which matches the requirement of Task 2.
