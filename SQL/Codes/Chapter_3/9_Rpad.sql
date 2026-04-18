@@ -1,0 +1,1 @@
+select rpad(18000, 10, '#') from dual;
