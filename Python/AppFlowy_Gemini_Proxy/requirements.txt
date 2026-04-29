@@ -1,0 +1,2 @@
+# No runtime packages are required.
+# The proxy uses only Python's standard library.
