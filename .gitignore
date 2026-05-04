@@ -1,7 +1,0 @@
-# Private AppFlowy Gemini proxy files
-Python/AppFlowy_Gemini_Proxy/config_private.py
-Python/AppFlowy_Gemini_Proxy/.venv/
-Python/AppFlowy_Gemini_Proxy/.runtime/
-Python/AppFlowy_Gemini_Proxy/__pycache__/
-Python/AppFlowy_Gemini_Proxy/tests/__pycache__/
-Python/AppFlowy_Gemini_Proxy/*.pyc

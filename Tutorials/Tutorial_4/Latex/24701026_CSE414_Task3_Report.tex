@@ -1,0 +1,488 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta}
+
+\setstretch{1.12}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\lstset{
+  language=SQL,
+  basicstyle=\ttfamily\scriptsize,
+  frame=single,
+  breaklines=true,
+  showstringspaces=false,
+  columns=fullflexible
+}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\tikzset{
+  entity/.style={draw, rectangle, rounded corners=2pt, text width=2.9cm, minimum height=0.9cm, align=center, fill=blue!5, font=\footnotesize},
+  rel/.style={draw, diamond, aspect=2, text width=1.8cm, align=center, fill=orange!10, inner sep=1.2pt, font=\footnotesize},
+  note/.style={font=\scriptsize, align=center},
+  line/.style={-Latex, thick}
+}
+
+\begin{document}
+
+\begin{center}
+\includegraphics[width=0.22\textwidth]{Assets/logo.png}
+\end{center}
+
+\begin{center}
+\textbf{UNIVERSITY OF CHITTAGONG}\\
+Department of Computer Science and Engineering
+\end{center}
+
+\vspace{0.8cm}
+
+\begin{center}
+\textbf{\Large Report: Task 3}\\
+\textbf{Refinement, Normalization, and SQL DDL for a Medical Database}
+\end{center}
+
+\vspace{0.8cm}
+
+\begin{center}
+
+\textbf{Course Title:} Database Management System\\
+\textbf{Course Code:} CSE 414
+
+\vspace{0.8cm}
+
+\textbf{Submitted to:}\\
+Dr. Rudra Pratap Deb Nath\\
+Professor\\
+Department of Computer Science and Engineering\\
+University of Chittagong
+
+\vspace{0.8cm}
+
+\textbf{Submitted by:}\\
+Name: Sanjida Mahi\\
+ID: 24701009\\
+Session: 2023--2024 B.Sc. Engineering (4th Semester)\\
+Department of Computer Science and Engineering\\
+University of Chittagong
+
+\vspace{0.8cm}
+
+\textbf{Date of Submission:}\\
+03 May 2026
+
+\end{center}
+
+\newpage
+
+\section{Introduction}
+
+In Task 1, we built an initial relational schema and SQL DDL for the medical database. 
+In Task 3, we're refining that original result logically by identifying functional
+dependencies, checking normal forms, and adapting the schema where necessary.
+
+We're using the supplied Excel workbook from \textbf{Tutorial 2} as the main source of data for this task. 
+It is a denormalized source because one row may contain multiple side effects, multiple drug interactions,
+and multiple clinical-trial conditions. 
+Therefore, we're structuring the normalized schema to store these informations in separate relations.
+
+\section{Relational Schema From Task 1}
+
+\begin{lstlisting}
+Drug(drug_name, drug_category)
+Disease(disease_name, disease_category)
+SideEffect(side_effect_name)
+Researcher(main_researcher)
+Company(company_name)
+Product(product_name)
+ClinicalTrial(
+    clinical_trial_title,
+    clinical_trial_status,
+    clinical_trial_country,
+    clinical_trial_department,
+    clinical_trial_institution,
+    clinical_trial_start_date,
+    clinical_trial_completion_date,
+    clinical_trial_condition,
+    clinical_trial_participants
+)
+Studies(clinical_trial_title, drug_name)
+Treats(drug_name, disease_name)
+HasSideEffect(drug_name, side_effect_name)
+InteractsWith(drug_name, interacts_with_drug_name)
+ConductedBy(clinical_trial_title, main_researcher)
+FocusesOn(clinical_trial_title, disease_name)
+IsMarketedAs(product_name, drug_name)
+ProducedBy(product_name, company_name)
+\end{lstlisting}
+
+\section{Functional Dependencies}
+This section identifies the functional dependencies (FDs) that holds the
+relations obtained from the Task 1 schema. These dependencies are later used as the basis for
+normalization into Third Normal Form (3NF).
+
+\newpage
+
+\begin{lstlisting}
+Drug(drug_name, drug_category)
+    intended FD:
+        drug_name -> drug_category
+    but this is not safe for the workbook because one drug
+    may belong to multiple categories
+
+Disease(disease_name, disease_category)
+    disease_name -> disease_category
+
+SideEffect(side_effect_name)
+    no non-trivial FD beyond the key
+
+Researcher(main_researcher)
+    no non-trivial FD beyond the key
+
+Company(company_name)
+    no non-trivial FD beyond the key
+
+Product(product_name)
+    no non-trivial FD inside this relation itself
+    later joins suggest:
+        product_name -> drug_name, company_name
+
+ClinicalTrial(clinical_trial_title, ...)
+    clinical_trial_title ->
+        clinical_trial_status,
+        clinical_trial_country,
+        clinical_trial_department,
+        clinical_trial_institution,
+        clinical_trial_start_date,
+        clinical_trial_completion_date,
+        clinical_trial_condition,
+        clinical_trial_participants
+    clinical_trial_condition is not atomic in the workbook
+
+Studies(clinical_trial_title, drug_name)
+    no non-trivial FD beyond the composite key
+
+Treats(drug_name, disease_name)
+    no non-trivial FD beyond the composite key
+
+HasSideEffect(drug_name, side_effect_name)
+    no non-trivial FD beyond the composite key
+
+InteractsWith(drug_name, interacts_with_drug_name)
+    no non-trivial FD beyond the composite key
+
+ConductedBy(clinical_trial_title, main_researcher)
+    clinical_trial_title -> main_researcher
+    main_researcher -> clinical_trial_title
+    because Task 1 used UNIQUE on main_researcher
+
+FocusesOn(clinical_trial_title, disease_name)
+    clinical_trial_title -> disease_name
+    this is too restrictive for the workbook
+
+IsMarketedAs(product_name, drug_name)
+    product_name -> drug_name
+
+ProducedBy(product_name, company_name)
+    product_name -> company_name
+\end{lstlisting}
+
+\subsection{Problems Revealed by the Task 1 Schema}
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Drug category was stored inside \texttt{Drug}.} This breaks down when one drug belongs to multiple categories in the sample data.
+    \item \textbf{Clinical trial condition was stored as one attribute.} The workbook shows repeated trial-condition columns, so the attribute is multi-valued.
+    \item \textbf{\texttt{FocusesOn} allowed only one disease per trial.} The workbook shows that a trial may be associated with several conditions.
+    \item \textbf{Product-to-drug and product-to-company were split across two relations.} This is valid, but it can be simplified into one normalized \texttt{Product} relation without losing information.
+    \item \textbf{Institution details were embedded in \texttt{ClinicalTrial}.} Separating them gives better reuse and avoids repeated location facts.
+\end{itemize}
+
+\section{Normalization to 3NF}
+Starting from Task 1, the schema needed the following refinements:
+
+\begin{enumerate}[leftmargin=1.5em]
+    \item Replace the single category attribute in \texttt{Drug}.\\
+    Introduce \texttt{DrugCategory} and \texttt{DrugHasCategory}.
+    \item Replace the single trial-condition attribute in \texttt{ClinicalTrial}.\\
+    Introduce \texttt{ConditionStudied} and \texttt{ClinicalTrialCondition}.
+    \item Replace the overly restrictive \texttt{FocusesOn} design with a proper multi-valued trial-condition structure.
+    \item Merge \texttt{Product}, \texttt{IsMarketedAs}, and \texttt{ProducedBy} into one cleaner \texttt{Product} relation.
+    \item Extract \texttt{Institution} and \texttt{Researcher} so repeated trial-location facts are stored once.
+\end{enumerate}
+
+After these changes, the resulting schema became the normalized schema presented later in this
+report.
+
+\subsection{Relation-by-Relation Refinement}
+\begin{enumerate}[leftmargin=1.5em]
+    \item {\small\texttt{Drug(drug\_name, drug\_category)}}\\
+    Decomposed into \texttt{Drug}, \texttt{DrugCategory}, and \texttt{DrugHasCategory} because one drug may belong to multiple categories.
+
+    \item {\small\texttt{Disease(disease\_name, disease\_category)}}\\
+    \item 
+    Refined into \texttt{Disease} and \texttt{DiseaseCategory} to separate category descriptions cleanly.
+
+    \item {\small\texttt{ClinicalTrial(..., clinical\_trial\_condition, ... )}}\\
+    Decomposed into \texttt{ClinicalTrial}, \texttt{ConditionStudied}, and\\
+    \texttt{ClinicalTrialCondition} because trial condition is multi-valued in the workbook.
+
+    \item {\small\texttt{Product, IsMarketedAs, ProducedBy}}\\
+    Combined logically into one normalized \texttt{Product(product\_name, company\_name, drug\_name)} relation plus separate \texttt{Company}.
+
+    \item {\small\texttt{ConductedBy} and trial location attributes inside \texttt{ClinicalTrial}}\\
+    Refined through separate \texttt{Institution} and \texttt{Researcher} relations so repeated location and researcher facts are stored once.
+
+    \item {\small\texttt{FocusesOn}}\\
+    Replaced conceptually by \texttt{ClinicalTrialCondition}, because the original one-trial-to-one-disease restriction does not fit the sample workbook.
+
+    \item {\small\texttt{Studies, Treats, HasSideEffect, InteractsWith}}\\
+    Kept as bridge relations because they already model many-to-many facts correctly.
+\end{enumerate}
+
+\subsection{3NF Check}
+A relation is in 3NF if for every non-trivial FD \texttt{X $\rightarrow$ A}, at least one of the
+following holds:
+
+\begin{enumerate}[leftmargin=1.5em]
+    \item \texttt{X} is a superkey, or
+    \item \texttt{A} is a prime attribute.
+\end{enumerate}
+
+For the final schema produced from the Task 1 starting point:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item In every entity relation with a non-key attribute, the determinant is the primary key.
+    \item In every bridge relation, there are no non-key attributes at all.
+    \item Therefore, all resulting relations satisfy 3NF directly.
+\end{itemize}
+
+\section{Highest Normal Form and BCNF Check}
+The next step is to determine whether the relations also satisfy BCNF. A relation is in BCNF if,
+for every non-trivial FD \texttt{X $\rightarrow$ A}, \texttt{X} is a superkey.
+
+\begin{enumerate}[leftmargin=1.5em]
+    \item {\small\texttt{Drug}}: BCNF. Only key attribute exists.
+    \item {\small\texttt{DrugCategory}}: BCNF. Only key attribute exists.
+    \item {\small\texttt{DrugHasCategory}}: BCNF. Composite key only; no non-key attributes.
+    \item {\small\texttt{DiseaseCategory}}: BCNF. Only key attribute exists.
+    \item {\small\texttt{Disease}}: BCNF. \texttt{disease\_name} is the key and determines the only non-key attribute.
+    \item {\small\texttt{SideEffect}}: BCNF. Only key attribute exists.
+    \item {\small\texttt{DrugTreats}}: BCNF. Composite key only; no non-key attributes.
+    \item {\small\texttt{DrugHasSideEffect}}: BCNF. Composite key only; no non-key attributes.
+    \item {\small\texttt{DrugInteraction}}: BCNF. Composite key only; no non-key attributes.
+    \item {\small\texttt{Company}}: BCNF. Only key attribute exists.
+    \item {\small\texttt{Product}}: BCNF. \texttt{(product\_name, company\_name)} is the determinant and a key.
+    \item {\small\texttt{Institution}}: BCNF. \texttt{(institution\_name, country)} is the determinant and a key.
+    \item {\small\texttt{Researcher}}: BCNF. No non-trivial FD beyond the composite key.
+    \item {\small\texttt{ClinicalTrial}}: BCNF. \texttt{trial\_title} is the determinant and a key.
+    \item {\small\texttt{ClinicalTrialStudiesDrug}}: BCNF. Composite key only; no non-key attributes.
+    \item {\small\texttt{ConditionStudied}}: BCNF. Only key attribute exists.
+    \item {\small\texttt{ClinicalTrialCondition}}: BCNF. Composite key only; no non-key attributes.
+\end{enumerate}
+
+Thus, the normalized schema derived from Task 1 is not only in 3NF but also in BCNF under the
+stated assumptions.
+
+\section{Normalized Relations and How They Were Derived}
+\subsection{Derivation from Task 1 and the Spreadsheet}
+The spreadsheet was effectively one wide denormalized relation containing:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item drug facts,
+    \item disease facts,
+    \item repeated side-effect columns,
+    \item repeated interacting-drug columns,
+    \item product and company facts,
+    \item repeated clinical-trial facts,
+    \item repeated clinical-trial-condition columns.
+\end{itemize}
+
+The normalized relations were derived from the Task 1 schema by applying the following ideas:
+
+\begin{enumerate}[leftmargin=1.5em]
+    \item Separate multi-valued facts into bridge relations.
+    \item Separate descriptive categories into their own tables.
+    \item Keep one fact in one place only.
+    \item Preserve natural identifiers where they are meaningful and sufficiently stable for the mini-world.
+    \item Remove Task 1 restrictions that do not fit the sample workbook, especially single-category drugs and single-condition trials.
+\end{enumerate}
+
+\subsection{Final Normalized Relations}
+\begin{lstlisting}
+Drug(
+    drug_name VARCHAR(120) PK
+)
+
+DrugCategory(
+    category_name VARCHAR(120) PK
+)
+
+DrugHasCategory(
+    drug_name VARCHAR(120) PK/FK -> Drug,
+    category_name VARCHAR(120) PK/FK -> DrugCategory
+)
+
+DiseaseCategory(
+    category_name VARCHAR(120) PK
+)
+
+Disease(
+    disease_name VARCHAR(200) PK,
+    category_name VARCHAR(120) FK -> DiseaseCategory
+)
+
+SideEffect(
+    side_effect_name VARCHAR(120) PK
+)
+
+DrugTreats(
+    drug_name VARCHAR(120) PK/FK -> Drug,
+    disease_name VARCHAR(200) PK/FK -> Disease
+)
+
+DrugHasSideEffect(
+    drug_name VARCHAR(120) PK/FK -> Drug,
+    side_effect_name VARCHAR(120) PK/FK -> SideEffect
+)
+
+DrugInteraction(
+    drug_name VARCHAR(120) PK/FK -> Drug,
+    interacting_drug_name VARCHAR(120) PK/FK -> Drug
+)
+
+Company(
+    company_name VARCHAR(160) PK
+)
+
+Product(
+    product_name VARCHAR(160),
+    company_name VARCHAR(160),
+    drug_name VARCHAR(120),
+    PK(product_name, company_name),
+    FK company_name -> Company,
+    FK drug_name -> Drug
+)
+
+Institution(
+    institution_name VARCHAR(200),
+    country VARCHAR(100),
+    facility_address VARCHAR(255),
+    PK(institution_name, country)
+)
+
+Researcher(
+    researcher_name VARCHAR(160),
+    institution_name VARCHAR(200),
+    country VARCHAR(100),
+    PK(researcher_name, institution_name, country),
+    FK(institution_name, country) -> Institution
+)
+
+ClinicalTrial(
+    trial_title VARCHAR(255) PK,
+    start_date DATE,
+    completion_date DATE,
+    participants INT,
+    status VARCHAR(80),
+    institution_name VARCHAR(200),
+    country VARCHAR(100),
+    main_researcher_name VARCHAR(160)
+)
+
+ClinicalTrialStudiesDrug(
+    trial_title VARCHAR(255) PK/FK -> ClinicalTrial,
+    drug_name VARCHAR(120) PK/FK -> Drug
+)
+
+ConditionStudied(
+    condition_name VARCHAR(200) PK
+)
+
+ClinicalTrialCondition(
+    trial_title VARCHAR(255) PK/FK -> ClinicalTrial,
+    condition_name VARCHAR(200) PK/FK -> ConditionStudied
+)
+\end{lstlisting}
+
+Key derivation ideas:
+\begin{itemize}[leftmargin=1.5em]
+    \item \texttt{DrugHasCategory} was introduced because one drug may have multiple categories.
+    \item \texttt{ClinicalTrialCondition} was introduced because one trial may mention multiple conditions.
+    \item \texttt{Product} was kept as one normalized relation instead of splitting product-to-drug and product-to-company facts across separate bridge tables.
+\end{itemize}
+
+\section{SQL DDL}
+The final SQL DDL is included below and also saved separately as:
+
+\texttt{24701026\_CSE414\_Task3\_Normalized\_Schema.sql}
+
+\lstinputlisting{24701026_CSE414_Task3_Normalized_Schema.sql}
+
+\section{Revised ER Diagram}
+The original Task 1 ER and relational design needed revision, but not a completely different
+mini-world interpretation. Task 3 makes the following refinements explicit:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item composite natural keys are retained where they help avoid unsafe uniqueness assumptions,
+    \item bridge relations are justified by the observed multi-valued spreadsheet fields,
+    \item candidate-key assumptions are turned into enforceable SQL constraints.
+\end{itemize}
+
+The revised ER diagram is therefore the corrected version of the original design and is close to the
+stronger structure that later appeared in Task 2:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{Assets/ERD.jpg}
+    \caption{Revised ER diagram for the normalized medical database.}
+\end{figure}
+
+\section{Comparison with Tasks 1 and 2}
+\subsection{Compared with Task 1}
+\begin{itemize}[leftmargin=1.5em]
+    \item Task 1 stored \texttt{drug\_category} inside \texttt{Drug}; Task 3 replaces this with a many-to-many category design.
+    \item Task 1 stored a single \texttt{clinical\_trial\_condition}; Task 3 models trial conditions as a separate multi-valued relation.
+    \item Task 1 used \texttt{FocusesOn} with one disease per trial; Task 3 removes that restriction.
+    \item Task 3 is formally justified through functional dependencies and normal-form analysis.
+\end{itemize}
+
+\subsection{Compared with Task 2}
+\begin{itemize}[leftmargin=1.5em]
+    \item The final Task 3 structure is close to Task 2 because Task 2 had already corrected most conceptual flaws from Task 1.
+    \item The difference is that Task 3 now derives that structure from the original Task 1 schema and justifies it with dependencies and normal forms.
+    \item Task 3 also turns the design into explicit SQL constraints and a normalization argument.
+\end{itemize}
+
+\subsection{Advantages of the Task 3 Design}
+\begin{itemize}[leftmargin=1.5em]
+    \item Less redundancy than the original spreadsheet.
+    \item Lower risk of update anomalies, insertion anomalies, and deletion anomalies.
+    \item Clearer enforcement of keys and referential integrity.
+    \item Better readiness for later querying and data loading.
+\end{itemize}
+
+\section{Conclusion}
+The Task 1 medical database schema required refinement because some of its assumptions did not fit
+the sample workbook, especially in the handling of drug categories and clinical-trial conditions.
+After identifying the functional dependencies and revising the schema, the final result was found to
+satisfy 3NF and, under the stated assumptions, also BCNF. The final SQL DDL therefore preserves a
+clean, non-redundant structure that is suitable for the next project stages.
+
+\end{document}
