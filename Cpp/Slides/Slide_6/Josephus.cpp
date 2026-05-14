@@ -22,6 +22,6 @@ int main(){
     for(int i = 1; i <= n; i++){
         person.push_back(i);
     }
-    cout << Josephus(k, 0);
+    cout << Josephus(k, 0) << endl;
     return 0;
 }
